@@ -1,6 +1,6 @@
 from datetime import date
 
-class Account:
+'''class Account:
     def __init__(self,Acc_No, pin,Name,opening_balance = 0):
         self.Acc_No = Acc_No ##This will act as the unique identifier
         self.Name = Name
@@ -110,7 +110,25 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
             account.display()
 
 def menu():
-''' print("Welcome to Shillings Credit Handlers.\n Please make your selection")
+print("Welcome to Shillings Credit Handlers.\n Please make your selection")
     print("1. Account Holder\n2.Staff member")
     Selection_input = int(input("Select a nmuber to continue: "))
-    if Selection_input == 1:'''
+    if Selection_input == 1:
+    ''' 
+    
+
+class Transaction:
+    #A single deposit or withdrawal, kept for the account's history.
+    _next_id = 1
+
+    def __init__(self, acc_no, tx_type, amount):
+        self.id = Transaction._next_id
+        Transaction._next_id += 1
+        self.acc_no = acc_no
+        self.type = tx_type
+        self.amount = amount
+        self.date = date.today()
+
+    def __repr__(self):
+        return f"[{self.date}] TXN{self.id}: {self.type} of {self.amount} UGX on account {self.acc_no}"
+
