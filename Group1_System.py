@@ -1,5 +1,5 @@
 #Kibirige Samuel Lutwama M25B38/034
-
+#NAMANDA HILDA MATILDA S25B38/018
 
 from datetime import date
 
@@ -134,4 +134,18 @@ class Transaction:
 
     def __repr__(self):
         return f"[{self.date}] TXN{self.id}: {self.type} of {self.amount} UGX on account {self.acc_no}"
-
+class Staff:
+    def __init__(self, Name, Role, Staff_ID):
+        self.Name = Name
+        self.Role = Role
+        self.Staff_id = Staff_ID
+        self.Members = {}## dictionary for staff members
+    def login(self):
+        Login_staff = input("Please enter your credentials in the order \n1.Name\n2.Role\n3.ID")
+        name, role,Staff_id =[item.strip() for item in Login_staff.split(",")]##use the comma to show separation of the diffent credentials
+        if name == self.Name and role == self.Role and Staff_id == self.Staff_id:
+            self.Members ={"Name": name, "Role": role, "ID": Staff_id}
+            print(f"Welcome {name}")
+        else:
+            print("Wrong Credentials!!")
+            return False
