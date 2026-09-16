@@ -1,6 +1,6 @@
 #Kibirige Samuel Lutwama M25B38/034
 #NAMANDA HILDA MATILDA S25B38/018
-
+#ATTI CINDY LYNNETTE S25B38/001
 from datetime import date
 
 '''class Account:
@@ -149,3 +149,24 @@ class Staff:
         else:
             print("Wrong Credentials!!")
             return False
+
+class Banking_system: ##The heart of the whole system. It handles everything from account creation to lookup
+    def __init__(self):
+        self.accounts =[]
+    def account_creation(self, account_number,name, opening_balance=0):
+        account = Account(account_number,name,opening_balance)
+        self.accounts.append(account)
+        return account
+    def find_acc(self,account_number):
+        for account in self.accounts:
+            if account.Acc_No == account_number:
+                return account
+        return None
+    def deposit(self,account_number, amount):
+        account = self.find_acc(account_number)
+        if account is None:
+            print("Acount doesn't exist")    
+            return False
+        return account.deposit(amount)#HALF OF THE BANKING CLASS
+
+
