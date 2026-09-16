@@ -21,7 +21,7 @@ class Account:
             return False
         print(f"Welcome {self.Name}")
         return True   
-     def deposit(self,amount
+     def deposit(self,amount)
         if amount<=0:
             print("This is cannot be a starting deposit number.")
             return False
@@ -29,6 +29,25 @@ class Account:
         self.transactions.append(transactions(self.Acc_No, "deposit",amount))
         print(f"You have successfully deposited {amount}UGX balance; {self.Balance}UGX")
         return True   #CONTINUATION TO CLASS ACCOUNT
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Withdrawal must be a positive amount.")
+            return False
+        if amount > self.balance:
+            print("Insufficient balance for this withdrawal.")
+            return False
+        self.balance -= amount
+        self.transactions.append(Transaction(self.acc_no, "withdrawal", amount))
+        print(f"Withdrew {amount} UGX. New balance: {self.balance} UGX")
+        return True
+
+    def display(self):
+        print("----------------------------")
+        print(f"Account Number: {self.acc_no}")
+        print(f"Account Holder: {self.name}")
+        print(f"Balance:        {self.balance} UGX")
+        print("----------------------------")
 
 
 class Transaction:
