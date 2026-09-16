@@ -1,6 +1,7 @@
 #Kibirige Samuel Lutwama M25B38/034
 #NAMANDA HILDA MATILDA S25B38/018
 #ATTI CINDY LYNNETTE S25B38/001
+#Lisa Kushaba S25B38/044
 from datetime import date
 
 '''class Account:
@@ -118,7 +119,31 @@ print("Welcome to Shillings Credit Handlers.\n Please make your selection")
     Selection_input = int(input("Select a nmuber to continue: "))
     if Selection_input == 1:
     ''' 
-    
+class Account:
+    def __init__(self,Acc_No, pin,Name,opening_balance = 0):
+        self.Acc_No = Acc_No ##This will act as the unique identifier
+        self.Name = Name
+        self._pin = pin
+        self. Balance = opening_balance##starts with 0 amount in the account
+        self.transactions = []##Where all the transactions for the account or person are stored.
+    def login(self,account_number,pin):
+        if account_number !=self.Acc_No:
+            print("We could not find this account")
+            return False
+        if pin != self._pin:
+            print("Incorrect Pin")
+            return False
+        print(f"Welcome {self.Name}")
+        return True   
+     def deposit(self,amount
+        if amount<=0:
+            print("This is cannot be a starting deposit number.")
+            return False
+        self.Balance =+ amount
+        self.transactions.append(transactions(self.Acc_No, "deposit",amount))
+        print(f"You have successfully deposited {amount}UGX balance; {self.Balance}UGX")
+        return True   #CONTINUATION TO CLASS ACCOUNT
+
 
 class Transaction:
     #A single deposit or withdrawal, kept for the account's history.
