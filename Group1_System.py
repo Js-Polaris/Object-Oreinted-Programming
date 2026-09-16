@@ -44,11 +44,11 @@ class Account:
         return True
 
     def display(self):
-        print("----------------------------")
+        print("------")
         print(f"Account Number: {self.acc_no}")
         print(f"Account Holder: {self.name}")
         print(f"Balance:        {self.balance} UGX")
-        print("----------------------------")
+        print("------")
 
 
 class Transaction:
