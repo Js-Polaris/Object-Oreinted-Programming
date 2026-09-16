@@ -22,7 +22,7 @@ class Account:
             return False
         print(f"Welcome {self.Name}")
         return True   
-     def deposit(self,amount)
+     def deposit(self,amount):
         if amount<=0:
             print("This is cannot be a starting deposit number.")
             return False
@@ -117,8 +117,38 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
     def display_account(self, acc_no):
         """Staff use this to show a clear summary of an account."""
         account = self.find_account(acc_no)
-        if account is None:
+        if account is None:    
             print("Account not found.")
             return
         account.display()
+
+# ---- Demo ----
+
+bank = BankingSystem()
+
+#Account creation
+acc1 = bank.open_account("ACC001", "Aisha Namutebi", 50000)
+acc2 = bank.open_account("ACC002", "Brian Okello")
+acc3 = bank.open_account("ACC003","Mulo Innocent",350000)
+
+print("=== Successful deposits and withdrawals ===")
+bank.deposit("ACC001", 20000)
+bank.withdraw("ACC001", 10000)
+bank.deposit("ACC002", 30000)
+bank.deposit("ACC003",300000)
+bank.withdraw("ACC003",649000)
+
+print("\n=== Invalid operations (must be refused) ===")
+bank.deposit("ACC001", -5000)     # negative deposit
+bank.withdraw("ACC002", 100000)   # withdrawal bigger than balance
+
+print("\n=== Staff: balance lookup ===")
+print(f"Balance on ACC001: {bank.check_balance('ACC001')} UGX")
+print(f"Balance on ACC003: {bank.check_balance('ACC003')} UGX")
+
+print("\n=== Final state of each account ===")
+bank.display_account("ACC001")
+bank.display_account("ACC002")
+bank.display_account("ACC003")
+
 
