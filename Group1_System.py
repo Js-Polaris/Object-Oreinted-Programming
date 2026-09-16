@@ -192,6 +192,27 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
         if account is None:
             print("Acount doesn't exist")    
             return False
-        return account.deposit(amount)#HALF OF THE BANKING CLASS
+        return account.deposit(amount)
+    def withdraw(self, acc_no, amount):
+        account = self.find_account(acc_no)
+        if account is None:
+            print("Account not found.")
+            return False
+        return account.withdraw(amount)
 
+    def check_balance(self, acc_no):
+        """Staff use this to look up the balance on any account."""
+        account = self.find_account(acc_no)
+        if account is None:
+            print("Account not found.")
+            return None
+        return account.balance
+
+    def display_account(self, acc_no):
+        """Staff use this to show a clear summary of an account."""
+        account = self.find_account(acc_no)
+        if account is None:
+            print("Account not found.")
+            return
+        account.display()
 
