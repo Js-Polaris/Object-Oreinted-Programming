@@ -120,7 +120,7 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
 
     def interactive_account_creation(self, opening_balance=0):
         name = input("Please enter your name here: ").strip()
-        while isinstance(name, str) or len(name)==0:
+        while len(name)==0:
             name = input("Name cannot be empty or with numbers. Re enter the name: ")
         def Pin_setup():
             try:
