@@ -14,18 +14,19 @@ class BankingError(Exception):
 
 class AccountNotFoundError(BankingError):
     pass
-  
-class DuplicateAccountError(BankingError):
+  class DuplicateAccountError(BankingError):
     pass 
- 
-class InvalidPinError(BankingError):
+ class InvalidPinError(BankingError):
     pass 
- 
-class InvalidAmountError(BankingError):
+ class InvalidAmountError(BankingError):
     pass 
- 
-class InsufficientFundsError(BankingError):
+ class InsufficientFundsError(BankingError):
     pass
+class DuplicateStaffError(BankingError):
+    pass
+class StaffNotFoundError(BankingError):
+    pass    
+    
   #Actual clases done
 class Account:
     def __init__(self,acc_no, pin,Name,opening_balance = 0):
@@ -156,8 +157,6 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
 
 
 def customer_menu(bank):
-    """Log a customer in, then let them deposit/withdraw/check balance
-    without asking for their PIN again on every single action."""
     acc_no = input("Enter your account number: ").strip()
     pin = input("Enter your PIN: ").strip()
 
@@ -215,15 +214,13 @@ def customer_menu(bank):
 
 
 def staff_login_flow(bank):
-    """Look up a registered staff member by ID and verify their credentials.
-    Returns the authenticated Staff object, or None on failure."""
+    
     staff_id = input("Staff ID: ").strip()
     try:
         staff = bank.find_staff(staff_id)
     except StaffNotFoundError as e:
         print(e)
         return None
-
     name = input("Name: ").strip()
     role = input("Role: ").strip()
     try:
@@ -232,7 +229,6 @@ def staff_login_flow(bank):
         print(f"Login failed: {e}")
         return None
     return staff
-
 
 def staff_menu(bank):
     staff = staff_login_flow(bank)
@@ -254,24 +250,20 @@ def staff_menu(bank):
                 print(f"Balance: {bank.check_balance(acc_no)} UGX")
             except BankingError as e:
                 print(e)
-
         elif choice == "2":
             acc_no = input("Account number: ").strip()
             try:
                 bank.display_account(acc_no)
             except BankingError as e:
                 print(e)
-
         elif choice == "3":
             print("Logged out.")
             return
-
         else:
             print("Invalid option, try again.")
 
-
 def main_menu():
-    bank = Banking_system()  # starts completely empty — nothing hardcoded
+    bank = Banking_system() 
 
     while True:
         print("""
@@ -283,33 +275,25 @@ def main_menu():
 5. Exit
 """)
         choice = input("Enter desired action here: ").strip()
-
         if choice == "1":
             try:
                 bank.interactive_account_creation()
             except BankingError as e:
                 print(f"Could not create account: {e}")
-
         elif choice == "2":
             try:
                 bank.interactive_staff_registration()
             except BankingError as e:
                 print(f"Could not register staff: {e}")
-
         elif choice == "3":
             staff_menu(bank)
-
         elif choice == "4":
             customer_menu(bank)
-
         elif choice == "5":
             print("Thank you for banking with Campus Credit. Goodbye!")
             break
-
         else:
             print("Invalid choice, please enter a number from 1 to 5.")
-
-
 if __name__ == "__main__":
     main_menu()
 
