@@ -153,42 +153,164 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
             return
         account.display()
 
-# ---- Demo ----
 
-bank = BankingSystem()
 
-#Account creation
-acc1 = bank.account_creation("ACC001", "Aisha Namutebi", 50000)
-acc2 = bank.account_creation("ACC002", "Brian Okello")
-acc3 = bank.account_creation("ACC003","Mulo Innocent",350000)
+def customer_menu(bank):
+    """Log a customer in, then let them deposit/withdraw/check balance
+    without asking for their PIN again on every single action."""
+    acc_no = input("Enter your account number: ").strip()
+    pin = input("Enter your PIN: ").strip()
 
-print("=== Customer login ===")
-acc1.login("ACC001", "0000")# wrong PIN
-acc1.login("ACC001", "1234")#correct
+    try:
+        account = bank.find_acc(acc_no)
+        account.login(acc_no, pin)
+    except BankingError as e:
+        print(f"Login failed: {e}")
+        return
 
-print("=== Successful deposits and withdrawals ===")
-bank.deposit("ACC001", 20000)
-bank.withdraw("ACC001", 10000)
-bank.deposit("ACC002", 30000)
-bank.deposit("ACC003",300000)
-bank.withdraw("ACC003",649000)
+    while True:
+        print("""
+--- Customer Menu ---
+1. Deposit
+2. Withdraw
+3. Check balance
+4. View transaction history
+5. Log out
+""")
+        choice = input("Choose an option: ").strip()
 
-print("\n=== Invalid operations (must be refused) ===")
-bank.deposit("ACC001", -5000)     # negative deposit
-bank.withdraw("ACC002", 100000)#withdrawal bigger than balance
-bank.deposit("ACC999", 1000)#account does not exist
+        if choice == "1":
+            try:
+                amount = float(input("Amount to deposit: "))
+                bank.deposit(acc_no, pin, amount)
+            except ValueError:
+                print("Please enter a valid number.")
+            except BankingError as e:
+                print(f"Deposit failed: {e}")
 
-print("\n=== Staff: balance lookup ===")
-teller = Staff("Hilda Namanda", "Teller", "S25B38/011")
-teller.login("Hilda Namanda", "Teller", "S25B38/011")
-print(f"Balance on ACC001: {bank.check_balance('ACC001')} UGX")
-print(f"Balance on ACC003: {bank.check_balance('ACC003')} UGX")
+        elif choice == "2":
+            try:
+                amount = float(input("Amount to withdraw: "))
+                bank.withdraw(acc_no, pin, amount)
+            except ValueError:
+                print("Please enter a valid number.")
+            except BankingError as e:
+                print(f"Withdrawal failed: {e}")
 
-print("\n=== Final state of each account ===")
-bank.display_account("ACC001")
-bank.display_account("ACC002")
-bank.display_account("ACC003")
+        elif choice == "3":
+            print(f"Balance: {account.balance} UGX")
 
-print("\n=== Transaction history for ACC001 ===")
-for tx in acc1.transactions:
-    print(tx)
+        elif choice == "4":
+            if not account.transactions:
+                print("No transactions yet.")
+            for tx in account.transactions:
+                print(tx)
+
+        elif choice == "5":
+            print("Logged out.")
+            return
+
+        else:
+            print("Invalid option, try again.")
+
+
+def staff_login_flow(bank):
+    """Look up a registered staff member by ID and verify their credentials.
+    Returns the authenticated Staff object, or None on failure."""
+    staff_id = input("Staff ID: ").strip()
+    try:
+        staff = bank.find_staff(staff_id)
+    except StaffNotFoundError as e:
+        print(e)
+        return None
+
+    name = input("Name: ").strip()
+    role = input("Role: ").strip()
+    try:
+        staff.login(name, role, staff_id)
+    except BankingError as e:
+        print(f"Login failed: {e}")
+        return None
+    return staff
+
+
+def staff_menu(bank):
+    staff = staff_login_flow(bank)
+    if staff is None:
+        return
+
+    while True:
+        print("""
+--- Staff Menu ---
+1. Check account balance
+2. Display account details
+3. Log out
+""")
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            acc_no = input("Account number: ").strip()
+            try:
+                print(f"Balance: {bank.check_balance(acc_no)} UGX")
+            except BankingError as e:
+                print(e)
+
+        elif choice == "2":
+            acc_no = input("Account number: ").strip()
+            try:
+                bank.display_account(acc_no)
+            except BankingError as e:
+                print(e)
+
+        elif choice == "3":
+            print("Logged out.")
+            return
+
+        else:
+            print("Invalid option, try again.")
+
+
+def main_menu():
+    bank = Banking_system()  # starts completely empty — nothing hardcoded
+
+    while True:
+        print("""
+==== Campus Credit System ====
+1. Create customer account
+2. Register staff member
+3. Login as staff
+4. Login as customer
+5. Exit
+""")
+        choice = input("Enter desired action here: ").strip()
+
+        if choice == "1":
+            try:
+                bank.interactive_account_creation()
+            except BankingError as e:
+                print(f"Could not create account: {e}")
+
+        elif choice == "2":
+            try:
+                bank.interactive_staff_registration()
+            except BankingError as e:
+                print(f"Could not register staff: {e}")
+
+        elif choice == "3":
+            staff_menu(bank)
+
+        elif choice == "4":
+            customer_menu(bank)
+
+        elif choice == "5":
+            print("Thank you for banking with Campus Credit. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice, please enter a number from 1 to 5.")
+
+
+if __name__ == "__main__":
+    main_menu()
+
+
