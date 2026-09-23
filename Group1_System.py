@@ -6,6 +6,27 @@
 #Kyanjo Matthew Kiwumulo M25B38/011
 
 from datetime import date
+import random
+
+##The fixed error handling for the various nticipated errors
+class BankingError(Exception):
+    """Base class for every error this banking system can raise."""
+
+class AccountNotFoundError(BankingError):
+    pass
+  
+class DuplicateAccountError(BankingError):
+    pass 
+ 
+class InvalidPinError(BankingError):
+    pass 
+ 
+class InvalidAmountError(BankingError):
+    pass 
+ 
+class InsufficientFundsError(BankingError):
+    pass
+  #Actual clases done
 class Account:
     def __init__(self,acc_no, pin,Name,opening_balance = 0):
         self.acc_no = Acc_No ##This will act as the unique identifier
