@@ -30,18 +30,19 @@ class StaffNotFoundError(BankingError):
   #Actual clases done
 class Account:
     def __init__(self,acc_no, pin,Name,opening_balance = 0):
-        self.acc_no = Acc_No ##This will act as the unique identifier
+        if opening_balance < 0:
+            raise InvalidAmountError("Opening balance cannot be negative.")
+        self.acc_no = acc_No ##This will act as the unique identifier
         self.name = name
         self._pin = pin
         self.balance = opening_balance##starts with 0 amount in the account
         self.transactions = []##Where all the transactions for the account or person are stored.
         
-def authenticate(self,pin):
+   def authenticate(self,pin):
         if pin != self._pin:
             raise InvalidPinError(f"No account matches {self.acc_no}")
-    def login(self,acc_no,pin):
-        if acc_no !=self.acc_no:
-            raise AccountNotFoundError(f"No acount matches {acc_no}")
+            
+    def login(self,pin):
         self.authenticate(pin)
         print(f"Welcome {self.name}")
         return True        
@@ -87,61 +88,55 @@ class Transaction:
 
     def __repr__(self):
         return (f"[{self.date}] TXN{self.id}: {self.type} of {self.amount} UGX on account {self.acc_no}")
+        
 class Staff:
     def __init__(self, Name, Role, staff_id):
         self.Name = Name
         self.Role = Role
         self.Staff_id = staff_id
-        self.Members = {}## dictionary for staff members
+        
     def login(self, name, role,staff_id):
         ##to check what credentials are being used
-        if name == self.Name and role == self.Role and staff_id == self.staff_id:
-            self.Members ={"Name": name, "Role": role, "ID": staff_id}
-            print(f"Welcome {name}")
-        raise InvalidPinError("Wrong PIN Papi!")
-    def prompt_login(self):
-        Login_staff = input("Please enter your credentials in the order \n1.Name\n2.Role\n3.ID")
-        parts = [item.strip() for item in Login_staff.split(",")]#use the comma to show separation of the diffent credentials
-        if len(parts) != 3:
-            print("Please enter exactly three values separated by commas.")
-            return False
-        return self.login(*parts) 
-
+         if (name, role, staff_id) != (self.name, self.role, self.staff_id):
+            raise InvalidCredentialsError("Wrong staff credentials.")
+        print(f"Welcome {name}")
+        return True
+    
 class Banking_system: ##The heart of the whole system. It handles everything from account creation to lookup
-    class Banking_system: ##The heart of the whole system. It handles everything from account creation to lookup
     def __init__(self):
         self.accounts ={}
+        self.staff = {}## dictionary for staff members
+        
     def account_creation(self, acc_no, pin, name, opening_balance=0):
         if acc_no in self.accounts:
             raise DuplicateAccountError(f"Account {acc_no} already exists.")
         account = Account(acc_no, pin, name, opening_balance)
         self.accounts[acc_no] = account
         return account
+        
+   def _pin_setup(self):
+        while True:
+            pin = input("Enter a PIN (minimum 5 digits): ").strip()
+            if not (pin.isdigit() and len(pin) >= 5):
+                print("PIN must be at least 5 digits, numbers only.")
+                continue
+            if pin != input("Re-enter the PIN: ").strip():
+                print("The PINs do not match.")
+                continue
+            return pin
 
     def interactive_account_creation(self, opening_balance=0):
         name = input("Please enter your name here: ").strip()
-        while len(name)==0:
-            name = input("Name cannot be empty or with numbers. Re enter the name: ")
-        def Pin_setup():
-            try:
-                pin = int(input("Please enter a PIN(minimum 5digits): "))
-                re_entry = int(input("Please re-enter the pin: "))
-            except ValueError:
-                print("Enter a digit for the pin")    
-                return Pin_setup()
-            if len(str(pin))<5:
-                print("PIN must be at least 5 digits")
-                return Pin_setup()
-            if pin !=re_entry:
-                print("The pins do not match")
-                return pin 
-        pin = Pin_setup()
+        while not name or not name.replace(" ", "").isalpha():
+            name = input("Name cannot be empty or contain numbers. Re-enter the name: ").strip()
+
+        pin = self._pin_setup()
                         
         acc_no = f"DSC:{random.randint(10000, 99999)}"
         while acc_no in self.accounts:
             acc_no = f"DSC:{random.randint(10000, 99999)}"
-        account = Account(acc_no, pin, name, opening_balance)
-        self.accounts[acc_no] = account
+            
+        account = self.account_creation(acc_no, pin, name, opening_balance)
         print(f"Welcome {name}, your account has been created with account number {acc_no}.")
         return account           
 
@@ -153,7 +148,7 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
         return staff
 
     def interactive_staff_registration(self):
-        name = input("Pleas put your name in here: ")
+        name = input("Pleas put your name in here: ").strip()
         while len(name)== 0:
             name = input("The name cannot be empty. Enter it again: ")
         role = input("Staff role (e.g. Teller, Manager): ").strip()
@@ -163,7 +158,7 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
         while len(staff_id) == 0 or staff_id in self.staff:
             if staff_id in self.staff:
                 print(f"Staff ID {staff_id} is already taken.")
-            staff_id = input("Please enter a unique staff ID: ")
+            staff_id = input("Please enter a unique staff ID: ").strip()
 
             staff = self.register_staff(name, role, staff_id)
             print(f"Staff member {name} registered with ID {staff_id}.")
@@ -176,37 +171,22 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
             return staff
 
     def find_acc(self,acc_no):
-        return self.accounts.get(acc_no)
+        account= self.accounts.get(acc_no)
+        if account is None:
+            raise AccountNotFoundError(f"No account matches {acc_no}")
+        return account
     
     def deposit(self,acc_no, amount):
-        account = self.find_acc(acc_no)
-        if account is None:
-            print("Acount doesn't exist")    
-            return False
-        return account.deposit(amount)
+        return self.find_acc(acc_no).deposit(amount)
     
     def withdraw(self, acc_no, amount):
-        account = self.find_acc(acc_no)
-        if account is None:
-            print("Account not found.")
-            return False
-        return account.withdraw(amount)
+        return self.find_acc(acc_no).withdraw(amount)
 
     def check_balance(self, acc_no):
-        ##Staff use this to look up the balance on any account.
-        account = self.find_acc(acc_no)
-        if account is None:
-            print("Account not found.")
-            return None
-        return account.balance
+         return self.find_acc(acc_no).balance
 
     def display_account(self, acc_no):
-        ##Staff use this to show a clear summary of an account.
-        account = self.find_acc(acc_no)
-        if account is None:    
-            print("Account not found.")
-            return
-        account.display()
+          return.self.find_acc(acc_no).display()
 
 def customer_menu(bank):
     acc_no = input("Enter your account number: ").strip()
@@ -214,19 +194,19 @@ def customer_menu(bank):
 
     try:
         account = bank.find_acc(acc_no)
-        account.login(acc_no, pin)
+        account.login(pin)
     except BankingError as e:
         print(f"Login failed: {e}")
         return
 
     while True:
-        print("--- Customer Menu ---
+        print('''--- Customer Menu ---
 1. Deposit
 2. Withdraw
 3. Check balance
 4. View transaction history
 5. Log out
-")
+''')
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
@@ -241,7 +221,7 @@ def customer_menu(bank):
         elif choice == "2":
             try:
                 amount = float(input("Amount to withdraw: "))
-                bank.withdraw(acc_no, pin, amount)
+                bank.withdraw(acc_no, amount)
             except ValueError:
                 print("Please enter a valid number.")
             except BankingError as e:
@@ -287,12 +267,12 @@ def staff_menu(bank):
         return
 
     while True:
-        print("
+        print('''
 --- Staff Menu ---
 1. Check account balance
 2. Display account details
 3. Log out
-")
+''')
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
@@ -317,14 +297,14 @@ def main_menu():
     bank = Banking_system() 
 
     while True:
-        print("
+        print('''
 ==== Campus Credit System ====
 1. Create customer account
 2. Register staff member
 3. Login as staff
 4. Login as customer
 5. Exit
-")
+''')
         choice = input("Enter desired action here: ").strip()
         if choice == "1":
             try:
