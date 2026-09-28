@@ -26,9 +26,7 @@ class AccountNotFoundError(BankingError):
 class DuplicateStaffError(BankingError):
     pass
 class StaffNotFoundError(BankingError):
-    pass    
-class InvalidCredentialsError(BankingError):
-    pass
+    pass   
     
     
   #Actual clases done
