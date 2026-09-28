@@ -11,6 +11,7 @@ import random
 ##The fixed error handling for the various nticipated errors
 class BankingError(Exception):
     """Base class for every error this banking system can raise."""
+    pass
 
 class AccountNotFoundError(BankingError):
     pass
@@ -26,6 +27,9 @@ class DuplicateStaffError(BankingError):
     pass
 class StaffNotFoundError(BankingError):
     pass    
+class InvalidCredentialsError(BankingError):
+    pass
+    
     
   #Actual clases done
 class Account:
