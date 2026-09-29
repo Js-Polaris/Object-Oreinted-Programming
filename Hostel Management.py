@@ -1,12 +1,13 @@
 class HostelInputError(Exception):
   pass
-class HostelNotFoundError():
+class HostelNotFoundError(Exception):
   pass
-class StudentNotFoundError():
+class StudentNotFoundError(Exception):
   pass
-class RoomTakenError():
+class RoomTakenError(Exception):
   pass
-
+class DuplicateStudentError(Exception):
+  pass
 
 class Hostel_Management:
   def __init__(self):
@@ -29,6 +30,7 @@ class Hostel_Management:
     self.hostels.append(hostel)
     self.next_id +=1
     print("\n {name} hostel has been added!")
+    
   def find_hostel(self):
     hostel_id = int(input("Enter the hostel_id Youre looking for here: "))
     for h in self.hostels:
@@ -37,6 +39,7 @@ class Hostel_Management:
               f"{h["name"]} |"
               f"{h["location"]} |"
               f"Rooms: {len(h["rooms"])}")
+      return HostelNotFoundError   
   def hostel_is_full(self, hostel):
     for room in hostel["rooms"]:
         if room.available_spaces() > 0:
@@ -46,8 +49,7 @@ class Hostel_Management:
   def add_student(self, student):
     for existing_student in self.students:
       if existing_student.student_id == student.student_id:
-        print("Student Already Exists")
-        return True
+        return DuplicateStudentError
       self.students.append(student)
       print(f"{student.name} has been added successfully!")
       return True
