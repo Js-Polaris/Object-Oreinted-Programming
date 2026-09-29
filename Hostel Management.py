@@ -23,12 +23,16 @@ class Hostel_Management:
   def add_hostel(self, name,rooms):
     try:
       name = input("Please Enter the hostel neame here: ")
+      if not name:
+        raise HostelInputError("name cannot be empty")
       rooms = int(input("How many rooms are availabe in your hostel: ")) 
+      if rooms <=0:
+        raise HostelInputError("rooms cannot be less than zero")
+      hostel = {"id": f"H{self.next_id:}", "name": name, "rooms_available": rooms }
+      self.hostels.append(hostel)
+      self.next_id +=1
     except ValueError:
-      print("Enter a proper name")
-    hostel = {"id": f"H{self.next_id:}", "name": name, "rooms_available": rooms }
-    self.hostels.append(hostel)
-    self.next_id +=1
+      print("enter valid number of rooms")    
     print("\n {name} hostel has been added!")
     
   def find_hostel(self):
