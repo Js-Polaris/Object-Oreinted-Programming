@@ -55,6 +55,18 @@ class Hostel_Management:
       self.students.append(student)
       print(f"{student.name} has been added successfully!")
       return True
+
+  def find_student(self,student_id):
+    try:
+      student_id = int(input("Enter teh student's ID here: "))
+      print(student.name)
+    except StudentNotFoundError as s:
+      print(f"Error: {s}")
+    for student  in self.students:
+      if student.student_id == student_id:
+        return student
+      raise StudentNotFoundError(f"Student with {student_id} is not found")
+    
   
 ## Room
 from abc import ABC, abstractmethod
