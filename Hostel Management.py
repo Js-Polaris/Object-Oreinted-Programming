@@ -37,6 +37,11 @@ class Hostel_Management:
               f"{h["name"]} |"
               f"{h["location"]} |"
               f"Rooms: {len(h["rooms"])}")
+  def hostel_is_full(self, hostel):
+    for room in hostel["rooms"]:
+        if room.available_spaces() > 0:
+            return False
+    return "hostel is fully occupied"
 
   def add_student(self, student):
     for existing_student in self.students:
