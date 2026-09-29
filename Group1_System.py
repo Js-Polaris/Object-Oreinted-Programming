@@ -15,13 +15,13 @@ class BankingError(Exception):
 
 class AccountNotFoundError(BankingError):
     pass
-  class DuplicateAccountError(BankingError):
+class DuplicateAccountError(BankingError):
     pass 
- class InvalidPinError(BankingError):
+class InvalidPinError(BankingError):
     pass 
- class InvalidAmountError(BankingError):
+class InvalidAmountError(BankingError):
     pass 
- class InsufficientFundsError(BankingError):
+class InsufficientFundsError(BankingError):
     pass
 class DuplicateStaffError(BankingError):
     pass
@@ -101,8 +101,8 @@ class Staff:
         ##to check what credentials are being used
          if (name, role, staff_id) != (self.name, self.role, self.staff_id):
             raise InvalidCredentialsError("Wrong staff credentials.")
-        print(f"Welcome {name}")
-        return True
+         print(f"Welcome {name}")
+         return True
     
 class Banking_system: ##The heart of the whole system. It handles everything from account creation to lookup
     def __init__(self):
@@ -116,7 +116,7 @@ class Banking_system: ##The heart of the whole system. It handles everything fro
         self.accounts[acc_no] = account
         return account
         
-   def _pin_setup(self):
+    def _pin_setup(self):
         while True:
             pin = input("Enter a PIN (minimum 5 digits): ").strip()
             if not (pin.isdigit() and len(pin) >= 5):
