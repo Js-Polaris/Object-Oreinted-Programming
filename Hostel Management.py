@@ -1,4 +1,11 @@
-print("Hello world")
+class HostelInputError(Exception):
+  pass
+class HostelNotFoundError():
+  pass
+class StudentNotFoundError():
+  pass
+class RoomTakenError():
+  pass
 
 class Hostel:
   def __init__(self, hostel_name, hostel_status):
