@@ -7,10 +7,46 @@ class StudentNotFoundError():
 class RoomTakenError():
   pass
 
-class Hostel:
-  def __init__(self, hostel_name, hostel_status):
-    self.hostel_name = hostel_name
-    self.hostel_status = hostel_status
+
+class Hostel_Management:
+  def __init__(self):
+    self.hostels =[{"id": H001}", "name": Nsibambi, "rooms_available": []},
+     {"id": H002}", "name": Sabiti, "rooms_available": []},
+     {"id": H003}", "name": PDR, "rooms_available": []},
+     {"id": H004}", "name": TechPark, "rooms_available": []}
+     ]
+    self.student = []
+    self.status = "active"
+    self.next_id = 5
+    
+  def add_hostel(self, name,rooms):
+    try:
+      name = input("Please Enter the hostel neame here: ")
+      rooms = int(input("How many rooms are availabe in your hostel: ")) 
+    except ValueError:
+      print("Enter a proper name")
+    hostel = {"id": f"H{self.next_id:}", "name": name, "rooms_available": rooms }
+    self.hostels.append(hostel)
+    self.next_id +=1
+    print("\n {name} hostel has been added!")
+  def find_hostel(self):
+    hostel_id = int(input("Enter the hostel_id Youre looking for here: "))
+    for h in self.hostels:
+      if h[hostel_id] == hostel_id:
+        print(f"{h["id"]} | "
+              f"{h["name"]} |"
+              f"{h["location"]} |"
+              f"Rooms: {len(h["rooms"])}")
+
+  def add_student(self, student):
+    for existing_student in self.students:
+      if existing_student.student_id == student.student_id:
+        print("Student Already Exists")
+        return True
+      self.students.append(student)
+      print(f"{student.name} has been added successfully!")
+      return True
+  
 ## Room
 from abc import ABC, abstractmethod
 class room(ABC):
