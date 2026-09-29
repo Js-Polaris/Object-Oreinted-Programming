@@ -67,7 +67,7 @@ class Hostel_Management:
         return student
       raise StudentNotFoundError(f"Student with {student_id} is not found")
     
-  
+"""  
 ## Room
 from abc import ABC, abstractmethod
 class room(ABC):
@@ -83,6 +83,7 @@ def capacity(self):
 @property
 def student_id(self):
   return self._student_id
+  ##room operations
 def is_full(self):
   return len(self.__student_ids) >= self._capacity 
   
@@ -118,7 +119,56 @@ def calculate_fee(self):
 def get_room_type(self): 
     pass
 
+   ##Display Information 
+def display_room(self):
+        print(f"Room Number: {self.room_no}")
+        print(f"Room Type: {self.get_room_type()}")
+        print(f"Capacity: {self.capacity}")
+        print(f"Occupants: {len(self.student_ids)}")
+        print(f"Available Spaces: {self.available_spaces()}")
+        print(f"Status: {self.status}")
+        print(f"Fee: UGX {self.calculate_fee():,}")
+    
+## Room Types
 
+class doubleroom(room):
+
+    def __init__(self, room_no):
+        super().__init__(room_no)
+        self._capacity = 2
+
+    def calculate_fee(self):
+        return 850_000
+
+    def get_room_type(self):
+        return "Double Room"
+
+
+class sharedroom(room):
+
+    def __init__(self, room_no):
+        super().__init__(room_no)
+        self._capacity = 6
+
+    def calculate_fee(self):
+        return 650_000
+
+    def get_room_type(self):
+        return "Shared Room"
+
+
+class singleroom(room):
+
+    def __init__(self, room_no):
+        super().__init__(room_no)
+        self._capacity = 1
+
+    def calculate_fee(self):
+        return 1_500_000
+
+    def get_room_type(self):
+        return "Single Room"
+"""
 
 
   
