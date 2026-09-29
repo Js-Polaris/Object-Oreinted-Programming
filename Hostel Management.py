@@ -46,7 +46,7 @@ class Hostel_Management:
     for room in hostel["rooms"]:
         if room.available_spaces() > 0:
             return False
-    return "hostel is fully occupied"
+    return True
 
   def add_student(self, student):
     for existing_student in self.students:
