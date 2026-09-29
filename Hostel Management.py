@@ -68,6 +68,149 @@ class Hostel_Management:
       raise StudentNotFoundError(f"Student with {student_id} is not found")
     
 
+# ============================================================
+# STUDENT CLASS
+# My contribution: Student class
+#
+# Responsibility:
+# This class represents one student in the hostel management
+# system. It stores the student's personal and academic details
+# and their current accommodation information.
+#
+# OOP concepts demonstrated here:
+# 1. Class and objects
+# 2. Constructor (__init__)
+# 3. Instance attributes
+# 4. Encapsulation
+# 5. Properties and setters
+# 6. Input validation
+# 7. Error handling using ValueError
+# ============================================================
+
+class Student:
+
+    # The constructor creates and initializes a Student object.
+    # hostel_name and room_number start as None because a student
+    # can be registered before they are allocated accommodation.
+    def __init__(
+        self,
+        student_id,
+        student_name,
+        gender,
+        course,
+        year,
+        hostel_name=None,
+        room_number=None
+    ):
+        self.student_id = student_id
+        self.student_name = student_name
+        self.gender = gender
+        self.course = course
+        self.year = year
+
+        # These are None until the student is allocated a room.
+        self.hostel_name = hostel_name
+        self.room_number = room_number
+
+    # --------------------------------------------------------
+    # STUDENT ID PROPERTY
+    # --------------------------------------------------------
+
+    @property
+    def student_id(self):
+        # Getter: allows controlled reading of the student ID.
+        return self._student_id
+
+    @student_id.setter
+    def student_id(self, value):
+        # Validation prevents an empty student ID.
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("Student ID cannot be empty.")
+
+        self._student_id = value.strip()
+
+    # --------------------------------------------------------
+    # STUDENT NAME PROPERTY
+    # --------------------------------------------------------
+
+    @property
+    def student_name(self):
+        # Getter for the student's name.
+        return self._student_name
+
+    @student_name.setter
+    def student_name(self, value):
+        # Name must not be empty.
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("Student name cannot be empty.")
+
+        # Prevent numbers and symbols from being entered as a name.
+        if not all(char.isalpha() or char.isspace() for char in value):
+            raise ValueError(
+                "Student name must contain letters and spaces only."
+            )
+
+        self._student_name = value.strip()
+
+    # --------------------------------------------------------
+    # GENDER PROPERTY
+    # --------------------------------------------------------
+
+    @property
+    def gender(self):
+        # Getter for gender.
+        return self._gender
+
+    @gender.setter
+    def gender(self, value):
+        # Only the accepted gender values are allowed.
+        allowed_genders = {"Male", "Female"}
+
+        if value not in allowed_genders:
+            raise ValueError("Gender must be Male or Female.")
+
+        self._gender = value
+
+    # --------------------------------------------------------
+    # YEAR PROPERTY
+    # --------------------------------------------------------
+
+    @property
+    def year(self):
+        # Getter for academic year.
+        return self._year
+
+    @year.setter
+    def year(self, value):
+        # Year must be an integer greater than zero.
+        if not isinstance(value, int) or value < 1:
+            raise ValueError("Year must be a positive number.")
+
+        self._year = value
+
+    # --------------------------------------------------------
+    # DISPLAY STUDENT DETAILS
+    # --------------------------------------------------------
+
+    def display_details(self):
+        """
+        Displays the student's personal, academic and
+        accommodation information.
+        """
+
+        print("\n===== STUDENT DETAILS =====")
+        print(f"Student ID: {self.student_id}")
+        print(f"Name: {self.student_name}")
+        print(f"Gender: {self.gender}")
+        print(f"Course: {self.course}")
+        print(f"Year: {self.year}")
+
+        # A student may exist without accommodation.
+        if self.hostel_name and self.room_number:
+            print(f"Hostel: {self.hostel_name}")
+            print(f"Room: {self.room_number}")
+        else:
+            print("Accommodation: Not allocated")
 ## Room
 from abc import ABC, abstractmethod
 class room(ABC):
