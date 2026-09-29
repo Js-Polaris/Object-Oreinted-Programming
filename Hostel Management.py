@@ -67,7 +67,7 @@ class Hostel_Management:
         return student
       raise StudentNotFoundError(f"Student with {student_id} is not found")
     
-"""  
+
 ## Room
 from abc import ABC, abstractmethod
 class room(ABC):
@@ -168,7 +168,7 @@ class singleroom(room):
 
     def get_room_type(self):
         return "Single Room"
-"""
+
 
 
   
