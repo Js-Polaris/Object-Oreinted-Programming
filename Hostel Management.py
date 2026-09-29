@@ -36,14 +36,12 @@ class Hostel_Management:
     print("\n {name} hostel has been added!")
     
   def find_hostel(self):
-    hostel_id = int(input("Enter the hostel_id Youre looking for here: "))
+    hostel_id = (input("Enter the hostel_id Youre looking for here: "))
     for h in self.hostels:
-      if h[hostel_id] == hostel_id:
-        print(f"{h["id"]} | "
-              f"{h["name"]} |"
-              f"{h["location"]} |"
-              f"Rooms: {len(h["rooms"])}")
-      return HostelNotFoundError   
+      if h["id"] == hostel_id:
+        return h
+      raise HostelNotFoundError(f"hostel with the id {hostel_id} is not here")  
+      
   def hostel_is_full(self, hostel):
     for room in hostel["rooms"]:
         if room.available_spaces() > 0:
