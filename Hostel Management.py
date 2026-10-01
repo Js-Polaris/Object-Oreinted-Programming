@@ -5,31 +5,23 @@ from abc import ABC, abstractmethod
 class HostelInputError(Exception):
     pass
 
-
 class HostelNotFoundError(Exception):
     pass
-
 
 class StudentNotFoundError(Exception):
     pass
 
-
 class RoomTakenError(Exception):
     pass
-
 
 class DuplicateStudentError(Exception):
     pass
 
-
 class RoomNotFoundError(Exception):
     pass
 
-
 class AccommodationError(Exception):
     pass
-
-
 
 # STUDENT CLASS
 class Student:
@@ -109,8 +101,6 @@ class Student:
             print(f"Room: {self.room_number}")
         else:
             print("Accommodation: Not allocated")
-
-
 
 # ABSTRACT ROOM CLASS
 class Room(ABC):
@@ -224,8 +214,6 @@ class SharedRoom(Room):
     def get_room_type(self):
         return "Shared Room"
 
-
-
 # HOSTEL CLASS
 class Hostel:
     def __init__(self, hostel_id, name):
@@ -277,10 +265,7 @@ class Hostel:
     def available_spaces(self):
         return sum(room.available_spaces() for room in self._rooms)
 
-
-
 # HOSTEL MANAGEMENT CLASS
-
 class Hostel_Management:
 
     def __init__(self):
@@ -495,9 +480,7 @@ class Hostel_Management:
 
 # MAIN MENU
 def main():
-
     system = Hostel_Management()
-
     while True:
 
         print("\n==========================================")
@@ -516,9 +499,7 @@ def main():
         choice = input("Enter your choice: ").strip()
 
         try:
-
             if choice == "1":
-
                 student_id = input("Enter student ID: ").strip()
                 name = input("Enter student name: ").strip()
                 gender = input("Enter gender: ").strip()
@@ -591,23 +572,16 @@ def main():
                 system.search_student(student_id)
 
             elif choice == "6":
-
                 system.display_all_rooms()
-
             elif choice == "7":
-
                 system.occupancy_summary()
-
             elif choice == "8":
-
                 print(
                     "\nThank you for using the "
                     "Hostel Management System."
                 )
                 break
-
             else:
-
                 print(
                     "\nInvalid choice. "
                     "Please select a number from 1-8."
