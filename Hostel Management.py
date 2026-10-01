@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
 
-
-# ============================================================
 # CUSTOM EXCEPTIONS
-# ============================================================
 
 class HostelInputError(Exception):
     pass
@@ -33,15 +30,8 @@ class AccommodationError(Exception):
     pass
 
 
-# ============================================================
-# STUDENT CLASS
-# My contribution: Student class
-# Responsibility: Stores student personal, academic and
-# accommodation information.
-# Demonstrates: constructor, instance attributes,
-# encapsulation, properties, setters and validation.
-# ============================================================
 
+# STUDENT CLASS
 class Student:
 
     def __init__(self, student_id, student_name, gender, course,
@@ -121,11 +111,8 @@ class Student:
             print("Accommodation: Not allocated")
 
 
-# ============================================================
-# ABSTRACT ROOM CLASS
-# Demonstrates abstraction, encapsulation and abstract methods.
-# ============================================================
 
+# ABSTRACT ROOM CLASS
 class Room(ABC):
 
     def __init__(self, room_no, capacity):
@@ -201,12 +188,7 @@ class Room(ABC):
         print(f"Status: {self.status}")
         print(f"Fee: UGX {self.calculate_fee():,}")
 
-
-# ============================================================
 # ROOM TYPES
-# Demonstrates inheritance, method overriding and polymorphism.
-# ============================================================
-
 class SingleRoom(Room):
 
     def __init__(self, room_no):
@@ -243,14 +225,9 @@ class SharedRoom(Room):
         return "Shared Room"
 
 
-# ============================================================
+
 # HOSTEL CLASS
-# Responsibility: Stores and manages Room objects.
-# Relationship: A Hostel contains Room objects.
-# ============================================================
-
 class Hostel:
-
     def __init__(self, hostel_id, name):
         self.hostel_id = hostel_id
         self.name = name
@@ -301,11 +278,8 @@ class Hostel:
         return sum(room.available_spaces() for room in self._rooms)
 
 
-# ============================================================
+
 # HOSTEL MANAGEMENT CLASS
-# Responsibility: Coordinates students, hostels, rooms and
-# hostel operations.
-# ============================================================
 
 class Hostel_Management:
 
@@ -369,7 +343,7 @@ class Hostel_Management:
         return hostel
 
     def add_student(self, student):
-
+        
         if not isinstance(student, Student):
             raise TypeError("Only Student objects can be registered.")
 
@@ -519,12 +493,7 @@ class Hostel_Management:
 
         return student
 
-
-# ============================================================
 # MAIN MENU
-# The menu handles user input while classes handle system logic.
-# ============================================================
-
 def main():
 
     system = Hostel_Management()
@@ -658,10 +627,7 @@ def main():
 
             print(f"\nError: {error}")
 
-
-# ============================================================
 # PROGRAM START
-# ============================================================
 
 if __name__ == "__main__":
     main()
