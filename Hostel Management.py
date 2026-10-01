@@ -190,11 +190,13 @@ class Room(ABC):
     def get_room_type(self):
         pass
 
-    def display_room(self):
+    def display_room(self, occupant_names=None):
         print(f"Room Number: {self.room_no}")
         print(f"Room Type: {self.get_room_type()}")
         print(f"Capacity: {self.capacity}")
         print(f"Occupants: {len(self.student_ids)}")
+        if occupant_names:
+            print(f"Occupant Names: {', '.join(occupant_names)}")
         print(f"Available Spaces: {self.available_spaces()}")
         print(f"Status: {self.status}")
         print(f"Fee: UGX {self.calculate_fee():,}")
@@ -279,11 +281,14 @@ class Hostel:
             f"Room {room_no} was not found in {self.name}."
         )
 
-    def display_rooms(self):
+    def display_rooms(self, name_lookup=None):
         print(f"\n========== {self.name.upper()} ==========")
 
         for room in self._rooms:
-            room.display_room()
+            names = None
+            if name_lookup:
+                names = [name_lookup(sid) for sid in room.student_ids]
+            room.display_room(names)
             print("-" * 40)
 
     def total_rooms(self):
@@ -430,10 +435,36 @@ class Hostel_Management:
         student.hostel_name = None
         student.room_number = None
 
+    def add_room(self, hostel_id, room_type, room_no):
+
+        hostel = self.find_hostel(hostel_id)
+
+        room_classes = {
+            "1": SingleRoom,
+            "2": DoubleRoom,
+            "3": SharedRoom
+        }
+
+        if room_type not in room_classes:
+            raise HostelInputError(
+                "Room type must be 1 (Single), 2 (Double) or 3 (Shared)."
+            )
+
+        room = room_classes[room_type](room_no)
+        hostel.add_room(room)
+
+        return room
+
+    def _student_name(self, student_id):
+        try:
+            return self.find_student(student_id).student_name
+        except StudentNotFoundError:
+            return student_id
+
     def display_all_rooms(self):
 
         for hostel in self.hostels:
-            hostel.display_rooms()
+            hostel.display_rooms(self._student_name)
 
     def occupancy_summary(self):
 
@@ -504,12 +535,13 @@ def main():
         print("      UNIVERSITY HOSTEL MANAGEMENT")
         print("==========================================")
         print("1. Register student")
-        print("2. Allocate student to room")
-        print("3. Vacate student")
-        print("4. Search student")
-        print("5. Display hostel rooms")
-        print("6. Display occupancy summary")
-        print("7. Exit")
+        print("2. Add hostel room")
+        print("3. Allocate student to room")
+        print("4. Vacate student")
+        print("5. Search student")
+        print("6. Display hostel rooms")
+        print("7. Display occupancy summary")
+        print("8. Exit")
         print("==========================================")
 
         choice = input("Enter your choice: ").strip()
@@ -546,6 +578,22 @@ def main():
 
             elif choice == "2":
 
+                hostel_id = input("Enter hostel ID (e.g. H001): ").strip()
+                print("Room types: 1. Single  2. Double  3. Shared")
+                room_type = input("Enter room type (1-3): ").strip()
+                room_no = input(
+                    "Enter new room number (e.g. H001-S21): "
+                ).strip()
+
+                room = system.add_room(hostel_id, room_type, room_no)
+
+                print(
+                    f"\n{room.get_room_type()} {room.room_no} "
+                    f"added successfully."
+                )
+
+            elif choice == "3":
+
                 student_id = input("Enter student ID: ").strip()
                 hostel_id = input("Enter hostel ID (e.g. H001): ").strip()
                 room_no = input(
@@ -560,7 +608,7 @@ def main():
 
                 print("\nStudent allocated successfully.")
 
-            elif choice == "3":
+            elif choice == "4":
 
                 student_id = input("Enter student ID: ").strip()
 
@@ -568,20 +616,20 @@ def main():
 
                 print("\nStudent has vacated the room successfully.")
 
-            elif choice == "4":
+            elif choice == "5":
 
                 student_id = input("Enter student ID: ").strip()
                 system.search_student(student_id)
 
-            elif choice == "5":
+            elif choice == "6":
 
                 system.display_all_rooms()
 
-            elif choice == "6":
+            elif choice == "7":
 
                 system.occupancy_summary()
 
-            elif choice == "7":
+            elif choice == "8":
 
                 print(
                     "\nThank you for using the "
@@ -593,7 +641,7 @@ def main():
 
                 print(
                     "\nInvalid choice. "
-                    "Please select a number from 1-7."
+                    "Please select a number from 1-8."
                 )
 
         except (
