@@ -42,10 +42,10 @@ class Student:
 
     @student_id.setter
     def student_id(self, value):
-        if not isinstance(value, str) or not value.strip():
+        if not isinstance(value, str) or not value.strip():##checks if the inputis actually a string and checks if the valuse is purley space 
             raise ValueError("Student ID cannot be empty.")
         self._student_id = value.strip()
-
+##everytime you set a student's id, python passes the id throught the setter and not directly to the attribute
     @property
     def student_name(self):
         return self._student_name
